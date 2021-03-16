@@ -37,6 +37,7 @@ namespace DBTestProject
                                     Name = groupName,
                                     Year = year,
                                 });
+                                Console.Clear();
                                 break;
                         }
                         case Commands.AddNewSongCommand:
@@ -57,6 +58,7 @@ namespace DBTestProject
                                     Year = songYear,
                                     GroupId = groupID,
                                 });
+                                Console.Clear();
                                 break;
                         }
                         
