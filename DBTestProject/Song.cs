@@ -13,5 +13,9 @@ namespace DBTestProject
         public int? Year { get; set; }
         public int GroupId { get; set; }
         public Group Group { get; set; }
+        public override string ToString()
+        {
+            return $"{Id}, {Name}, {Year}, {Group?.Id}";
+        }
     }
 }

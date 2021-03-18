@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DBTestProject
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             using (TestDbContext db = new TestDbContext())
             {
@@ -22,6 +24,7 @@ namespace DBTestProject
                                 Console.WriteLine($"Write {Commands.AddNewGroupCommand} if you want add new group");
                                 Console.WriteLine($"Write {Commands.GetAllSongsCommand} if you want to get all users");
                                 Console.WriteLine($"Write {Commands.GetAllGroupsCommand} if you want to get all groups");
+                                Console.WriteLine($"Write {Commands.UpdateSongCommand} if you want to update some song data");
                                 Console.WriteLine($"Write {Commands.SaveAllChangesCommand} if you want to save all changes");
                                 Console.WriteLine($"Write {Commands.ExitCommand} if you want to exit the app");
                                 break;
@@ -40,12 +43,29 @@ namespace DBTestProject
                                 Console.Clear();
                                 break;
                         }
+                        case Commands.GetAllGroupsCommand:
+                        {
+                                DisplayCollectionChilds(db.Groups);
+                                break;
+                        }
+                        case Commands.UpdateGroupCommand:
+                        {
+                                DisplayCollectionChilds(db.Groups);
+                                Console.Write("Write the group id that you want to change: ");
+                                int id = int.Parse(Console.ReadLine());
+                                var selectedGroup = db.Groups.FirstOrDefault(item => item.Id == id);
+                                Console.Write("Write the updated group name: ");
+                                string updatedName = Console.ReadLine();
+                                Console.Write("Write the updated group year: ");
+                                int updatedYear = int.Parse(Console.ReadLine());
+                                selectedGroup.Name = updatedName;
+                                selectedGroup.Year = updatedYear;
+                                break;
+                        }
+
                         case Commands.AddNewSongCommand:
                         {
-                                foreach (var item in db.Groups)
-                                {
-                                    Console.WriteLine($"Group ID: {item.Id}, Group Name: {item.Name}");
-                                }
+                                DisplayCollectionChilds(db.Groups);
                                 Console.Write("Write song name: ");
                                 string songName = Console.ReadLine();
                                 Console.Write("Write song year: ");
@@ -61,28 +81,34 @@ namespace DBTestProject
                                 Console.Clear();
                                 break;
                         }
-                        
                         case Commands.GetAllSongsCommand:
                         {
-                                foreach (var item in db.Songs)
-                                {
-                                    Console.WriteLine($"{item.Id}, {item.Name}, {item.Year}, {item.Group.Id}");
-                                    Console.WriteLine(new string('-', 30));
-                                }
+                                DisplayCollectionChilds(db.Songs);
                                 break;
                         }
-                        case Commands.GetAllGroupsCommand:
+                        
+                        case Commands.UpdateSongCommand:
                         {
-                                foreach (var item in db.Groups)
-                                {
-                                    Console.WriteLine($"{item.Id}, {item.Name}, {item.Year}");
-                                    Console.WriteLine(new string('-', 30));
-                                }
+                                DisplayCollectionChilds(db.Songs);
+                                Console.Write("Write the song id");
+                                int writedId = int.Parse(Console.ReadLine());
+                                Song selectedSong = db.Songs.FirstOrDefault(item => item.Id == writedId);
+                                Console.WriteLine(selectedSong);
+                                Console.Write("Write the updated name: ");
+                                string updatedName = Console.ReadLine();
+                                Console.Write("Write the updated year: ");
+                                int? updatedYear = int.Parse(Console.ReadLine());
+                                Console.Write("Write the updated groupID: ");
+                                int groupId = int.Parse(Console.ReadLine());
+                                selectedSong.Name = updatedName;
+                                selectedSong.Year = updatedYear;
+                                selectedSong.GroupId = groupId;
                                 break;
                         }
                         case Commands.SaveAllChangesCommand:
                         {
                                 db.SaveChanges();
+                                Console.WriteLine("Saved successfully");
                                 break;
                         }
                         case Commands.ExitCommand:
@@ -90,15 +116,22 @@ namespace DBTestProject
                                 Environment.Exit(0);
                                 break;
                         }
-
                         default:
-                            {
-                                Console.WriteLine("Wrong command");
-                                break;
-                            }
+                        {
+                            Console.WriteLine("Wrong command");
+                            break;
+                        }
 
                     }
                 }
+            }
+        }
+        private static void DisplayCollectionChilds(IEnumerable<object> ts)
+        {
+            foreach (var item in ts)
+            {
+                Console.WriteLine(item);
+                Console.WriteLine(new string('-', 30));
             }
         }
     }

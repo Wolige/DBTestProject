@@ -12,5 +12,9 @@ namespace DBTestProject
         public string Name { get; set; }
         public int? Year { get; set; }
         public ICollection<Song> Songs { get; set; }
+        public override string ToString()
+        {
+            return $"Group ID: {Id}, Group Name: {Name}";
+        }
     }
 }
