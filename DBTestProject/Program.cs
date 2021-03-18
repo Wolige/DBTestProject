@@ -20,11 +20,14 @@ namespace DBTestProject
                     {
                         case Commands.HelpCommand:
                         {
-                                Console.WriteLine($"Write {Commands.AddNewSongCommand} if you want add new song");
-                                Console.WriteLine($"Write {Commands.AddNewGroupCommand} if you want add new group");
-                                Console.WriteLine($"Write {Commands.GetAllSongsCommand} if you want to get all users");
                                 Console.WriteLine($"Write {Commands.GetAllGroupsCommand} if you want to get all groups");
+                                Console.WriteLine($"Write {Commands.AddNewGroupCommand} if you want add new group");
+                                Console.WriteLine($"Write {Commands.UpdateGroupCommand} if you want update group data");
+                                Console.WriteLine($"Write {Commands.DeleteGroupCommand} if you want delete the group");
+                                Console.WriteLine($"Write {Commands.AddNewSongCommand} if you want add new song");
+                                Console.WriteLine($"Write {Commands.GetAllSongsCommand} if you want to get all users");
                                 Console.WriteLine($"Write {Commands.UpdateSongCommand} if you want to update some song data");
+                                Console.WriteLine($"Write {Commands.DeleteSongCommand} if you want to delete some song data");
                                 Console.WriteLine($"Write {Commands.SaveAllChangesCommand} if you want to save all changes");
                                 Console.WriteLine($"Write {Commands.ExitCommand} if you want to exit the app");
                                 break;
@@ -40,7 +43,6 @@ namespace DBTestProject
                                     Name = groupName,
                                     Year = year,
                                 });
-                                Console.Clear();
                                 break;
                         }
                         case Commands.GetAllGroupsCommand:
@@ -62,7 +64,14 @@ namespace DBTestProject
                                 selectedGroup.Year = updatedYear;
                                 break;
                         }
-
+                        case Commands.DeleteGroupCommand:
+                        {
+                                DisplayCollectionChilds(db.Groups);
+                                Console.Write("Write the group id that you want to change: ");
+                                int id = int.Parse(Console.ReadLine());
+                                db.Groups.Remove(db.Groups.SingleOrDefault(item => item.Id == id));
+                                break;
+                        }
                         case Commands.AddNewSongCommand:
                         {
                                 DisplayCollectionChilds(db.Groups);
@@ -78,7 +87,6 @@ namespace DBTestProject
                                     Year = songYear,
                                     GroupId = groupID,
                                 });
-                                Console.Clear();
                                 break;
                         }
                         case Commands.GetAllSongsCommand:
@@ -86,7 +94,6 @@ namespace DBTestProject
                                 DisplayCollectionChilds(db.Songs);
                                 break;
                         }
-                        
                         case Commands.UpdateSongCommand:
                         {
                                 DisplayCollectionChilds(db.Songs);
@@ -103,6 +110,14 @@ namespace DBTestProject
                                 selectedSong.Name = updatedName;
                                 selectedSong.Year = updatedYear;
                                 selectedSong.GroupId = groupId;
+                                break;
+                        }
+                        case Commands.DeleteSongCommand:
+                        {
+                                DisplayCollectionChilds(db.Songs);
+                                Console.Write("Write the song id");
+                                int writedId = int.Parse(Console.ReadLine());
+                                db.Songs.Remove(db.Songs.SingleOrDefault(item => item.Id == writedId));
                                 break;
                         }
                         case Commands.SaveAllChangesCommand:
